@@ -1,0 +1,16 @@
+[
+	{
+		"modid": "simple_trophies",
+		"name": "Simple Trophies",
+		"description": "It adds trophies!",
+		"version": "${version}",
+		"mcversion": "${mcversion}",
+		"url": "",
+		"updateUrl": "",
+		"authorList": ["quaternary"],
+		"credits": ":D",
+		"logoFile": "",
+		"screenshots": [],
+		"dependencies": []
+	}
+]
