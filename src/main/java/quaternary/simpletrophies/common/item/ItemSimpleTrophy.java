@@ -170,8 +170,5 @@ public class ItemSimpleTrophy extends ItemBlock {
 		}
 		
 		tile.readFromNBTInternal(stack.getTagCompound());
-		
-		//allow for renaming it in an anvil before placing it I guess?
-		if(stack.hasDisplayName()) tile.displayedName = stack.getDisplayName();
 	}
 }
