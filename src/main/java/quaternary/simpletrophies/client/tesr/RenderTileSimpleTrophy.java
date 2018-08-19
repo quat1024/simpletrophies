@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import quaternary.simpletrophies.client.ClientGameEvents;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
@@ -22,9 +23,12 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			ticks += (te.getPos().getX() ^ te.getPos().getZ()) * 30;
 			
 			GlStateManager.pushMatrix();
+			
 			GlStateManager.translate(x + .5, y + .6 + Math.sin(ticks / 25f) / 7f, z + .5);
+			if(displayedStack.getItem() instanceof ItemBlock) GlStateManager.translate(0, -0.1, 0);
+			
 			GlStateManager.rotate((ticks * 2.5f) % 360, 0, 1, 0);
-			GlStateManager.scale(1.2, 1.2, 1.2);
+			GlStateManager.scale(1.6, 1.6, 1.6);
 			try {
 				Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
 			} catch(Exception oof) {

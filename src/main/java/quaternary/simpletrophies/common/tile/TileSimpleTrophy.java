@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 public class TileSimpleTrophy extends TileEntity {
 	public ItemStack displayedStack = ItemStack.EMPTY;
 	public String displayedName = "";
+	public int displayedColor = 0xFFFFFF;
 	
 	@Nullable
 	@Override
@@ -61,11 +62,13 @@ public class TileSimpleTrophy extends TileEntity {
 	public NBTTagCompound writeToNBTInternal(NBTTagCompound nbt) {
 		nbt.setTag(BlockSimpleTrophy.KEY_ITEM, displayedStack.serializeNBT());
 		nbt.setString(BlockSimpleTrophy.KEY_NAME, displayedName);
+		nbt.setInteger(BlockSimpleTrophy.KEY_COLOR, displayedColor);
 		return nbt;
 	}
 	
 	public void readFromNBTInternal(NBTTagCompound nbt) {
 		displayedStack = new ItemStack(nbt.getCompoundTag(BlockSimpleTrophy.KEY_ITEM));
 		displayedName = nbt.getString(BlockSimpleTrophy.KEY_NAME);
+		displayedColor = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR);
 	}
 }

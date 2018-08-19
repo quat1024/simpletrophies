@@ -9,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -25,9 +27,17 @@ public class BlockSimpleTrophy extends Block {
 	//basically a bunch of stuff uses these keys so might as well slap them here
 	public static final String KEY_NAME = "TrophyName";
 	public static final String KEY_ITEM = "TrophyItem";
+	public static final String KEY_COLOR = "TrophyColor";
 	
 	public BlockSimpleTrophy() {
 		super(Material.ROCK, MapColor.GOLD);
+	}
+	
+	private static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 1, 6/16d, 1);
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		return AABB;
 	}
 	
 	@Override
@@ -39,6 +49,26 @@ public class BlockSimpleTrophy extends Block {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileSimpleTrophy();
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if(!player.isCreative()) return false;
+		
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TileSimpleTrophy) {
+			TileSimpleTrophy trophy = (TileSimpleTrophy) tile;
+			if(trophy.displayedStack.isEmpty()) {
+				trophy.displayedStack = player.getHeldItem(hand).copy();
+				IBlockState hahaYes = world.getBlockState(pos);
+				world.notifyBlockUpdate(pos, hahaYes, hahaYes, 2);
+				trophy.markDirty();
+				
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	@Override

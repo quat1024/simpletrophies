@@ -3,8 +3,12 @@ package quaternary.simpletrophies.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -15,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.tesr.RenderItemStackSimpleTrophy;
 import quaternary.simpletrophies.client.tesr.RenderTileSimpleTrophy;
+import quaternary.simpletrophies.common.block.SimpleTrophiesBlocks;
 import quaternary.simpletrophies.common.item.SimpleTrophiesItems;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
@@ -30,6 +35,19 @@ public class ClientGameEvents {
 	
 	private static void setSimpleItemModel(Item e) {
 		ModelLoader.setCustomModelResourceLocation(e, 0, new ModelResourceLocation(e.getRegistryName(), "inventory"));
+	}
+	
+	@SubscribeEvent
+	public static void blockColors(ColorHandlerEvent.Block e) {
+		BlockColors bc = e.getBlockColors();
+		bc.registerBlockColorHandler((state, world, pos, tintIndex) -> {
+			if(world == null || pos == null || tintIndex != 1) return 0xFFFFFF;
+			
+			TileEntity tile = (world).getTileEntity(pos);
+			if(tile instanceof TileSimpleTrophy) {
+				return ((TileSimpleTrophy) tile).displayedColor | 0xFF000000;
+			} else return 0xFFFFFF;
+		}, SimpleTrophiesBlocks.TROPHY);
 	}
 	
 	private static long ticksInGame = 0;

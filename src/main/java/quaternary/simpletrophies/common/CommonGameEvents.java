@@ -2,11 +2,13 @@ package quaternary.simpletrophies.common;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.common.block.SimpleTrophiesBlocks;
+import quaternary.simpletrophies.common.item.ItemSimpleTrophy;
 import quaternary.simpletrophies.common.item.SimpleTrophiesItems;
 import quaternary.simpletrophies.common.tile.SimpleTrophiesTiles;
 

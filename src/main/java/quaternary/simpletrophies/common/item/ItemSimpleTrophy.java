@@ -3,6 +3,7 @@ package quaternary.simpletrophies.common.item;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
@@ -44,6 +45,30 @@ public class ItemSimpleTrophy extends ItemBlock {
 		} else return "";
 	}
 	
+	public static int getColor(ItemStack trophyStack) {
+		if(trophyStack.hasTagCompound() && trophyStack.getTagCompound().hasKey(BlockSimpleTrophy.KEY_COLOR)) {
+			return trophyStack.getTagCompound().getInteger(BlockSimpleTrophy.KEY_COLOR);
+		} else return 0xFFFFFF;
+	}
+	
+	@Override
+	public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
+		//Move vanilla customname stuff (italic) over to my own system
+		//This just lets people rename the trophy in an anvil instead of needing to manually NBT hack
+		//and have it not show up all... italicy and weird
+		if(entity instanceof EntityPlayer && ((EntityPlayer)entity).isCreative()) {
+			if(stack.hasDisplayName()) {
+				String customName = stack.getDisplayName();
+				if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
+				stack.getTagCompound().setString(BlockSimpleTrophy.KEY_NAME, customName);
+				stack.clearCustomName();
+				
+				//remove the funky anvil tag too
+				if(stack.getTagCompound().hasKey("RepairCost")) stack.getTagCompound().removeTag("RepairCost");
+			}
+		}
+	}
+	
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		String trophyName = getName(stack);
@@ -77,7 +102,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 			//add the item itself's tooltip. Why not?
 			List<String> displayedTooltip = new ArrayList<>();
 			displayedStack.getItem().addInformation(displayedStack, world, displayedTooltip, mistake);
-			tooltip.addAll(displayedTooltip);
+			displayedTooltip.forEach(s -> tooltip.add("   " + s));
 		}
 		
 		super.addInformation(stack, world, tooltip, mistake);
@@ -135,6 +160,10 @@ public class ItemSimpleTrophy extends ItemBlock {
 			tile.displayedStack = ItemStack.EMPTY;
 			return;
 		}
+		
 		tile.readFromNBTInternal(stack.getTagCompound());
+		
+		//allow for renaming it in an anvil before placing it I guess?
+		if(stack.hasDisplayName()) tile.displayedName = stack.getDisplayName();
 	}
 }
