@@ -45,7 +45,8 @@ public class ClientGameEvents {
 			
 			TileEntity tile = (world).getTileEntity(pos);
 			if(tile instanceof TileSimpleTrophy) {
-				return ((TileSimpleTrophy) tile).displayedColor | 0xFF000000;
+				TileSimpleTrophy trophy = (TileSimpleTrophy) tile;
+				return (trophy.displayedColorRed << 16) | (trophy.displayedColorGreen << 8) | trophy.displayedColorBlue;
 			} else return 0xFFFFFF;
 		}, SimpleTrophiesBlocks.TROPHY);
 	}

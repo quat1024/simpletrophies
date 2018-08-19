@@ -8,6 +8,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -27,7 +29,9 @@ public class BlockSimpleTrophy extends Block {
 	//basically a bunch of stuff uses these keys so might as well slap them here
 	public static final String KEY_NAME = "TrophyName";
 	public static final String KEY_ITEM = "TrophyItem";
-	public static final String KEY_COLOR = "TrophyColor";
+	public static final String KEY_COLOR_RED = "TrophyColorRed";
+	public static final String KEY_COLOR_GREEN = "TrophyColorGreen";
+	public static final String KEY_COLOR_BLUE = "TrophyColorBlue";
 	
 	public BlockSimpleTrophy() {
 		super(Material.ROCK, MapColor.GOLD);
@@ -111,6 +115,12 @@ public class BlockSimpleTrophy extends Block {
 	@Override
 	public int getLightOpacity(IBlockState state) {
 		return 0;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public BlockRenderLayer getRenderLayer() {
+		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 	
 	@Override

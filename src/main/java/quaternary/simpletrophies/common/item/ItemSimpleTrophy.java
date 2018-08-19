@@ -16,6 +16,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -46,8 +47,15 @@ public class ItemSimpleTrophy extends ItemBlock {
 	}
 	
 	public static int getColor(ItemStack trophyStack) {
-		if(trophyStack.hasTagCompound() && trophyStack.getTagCompound().hasKey(BlockSimpleTrophy.KEY_COLOR)) {
-			return trophyStack.getTagCompound().getInteger(BlockSimpleTrophy.KEY_COLOR);
+		if(trophyStack.hasTagCompound()) {
+			NBTTagCompound nbt = trophyStack.getTagCompound();
+			int red = nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_RED) ? nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_RED) : 255;
+			int green = nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_GREEN) ? nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_GREEN) : 255;
+			int blue = nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_BLUE) ? nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_BLUE) : 255;
+			red = MathHelper.clamp(red, 0, 255);
+			green = MathHelper.clamp(green, 0, 255);
+			blue = MathHelper.clamp(blue, 0, 255);
+			return (red << 16) | (green << 8) | blue;
 		} else return 0xFFFFFF;
 	}
 	

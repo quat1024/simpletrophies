@@ -15,7 +15,9 @@ import javax.annotation.Nullable;
 public class TileSimpleTrophy extends TileEntity {
 	public ItemStack displayedStack = ItemStack.EMPTY;
 	public String displayedName = "";
-	public int displayedColor = 0xFFFFFF;
+	public int displayedColorRed = 255;
+	public int displayedColorGreen = 255;
+	public int displayedColorBlue = 255;
 	
 	@Nullable
 	@Override
@@ -62,13 +64,18 @@ public class TileSimpleTrophy extends TileEntity {
 	public NBTTagCompound writeToNBTInternal(NBTTagCompound nbt) {
 		nbt.setTag(BlockSimpleTrophy.KEY_ITEM, displayedStack.serializeNBT());
 		nbt.setString(BlockSimpleTrophy.KEY_NAME, displayedName);
-		nbt.setInteger(BlockSimpleTrophy.KEY_COLOR, displayedColor);
+		nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_RED, displayedColorRed);
+		nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_GREEN, displayedColorGreen);
+		nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_BLUE, displayedColorBlue);
+		
 		return nbt;
 	}
 	
 	public void readFromNBTInternal(NBTTagCompound nbt) {
 		displayedStack = new ItemStack(nbt.getCompoundTag(BlockSimpleTrophy.KEY_ITEM));
 		displayedName = nbt.getString(BlockSimpleTrophy.KEY_NAME);
-		displayedColor = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR);
+		displayedColorRed = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_RED);
+		displayedColorGreen = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_GREEN);
+		displayedColorBlue = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_BLUE);
 	}
 }
