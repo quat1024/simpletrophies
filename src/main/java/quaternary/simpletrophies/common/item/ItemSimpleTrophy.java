@@ -32,13 +32,13 @@ public class ItemSimpleTrophy extends ItemBlock {
 		super(block);
 	}
 	
-	private static ItemStack getDisplayedItem(ItemStack trophyStack) {
+	public static ItemStack getDisplayedItem(ItemStack trophyStack) {
 		if(trophyStack.hasTagCompound() && trophyStack.getTagCompound().hasKey(BlockSimpleTrophy.KEY_ITEM)) {
 			return new ItemStack(trophyStack.getTagCompound().getCompoundTag(BlockSimpleTrophy.KEY_ITEM));
 		} else return ItemStack.EMPTY;
 	}
 	
-	private static String getName(ItemStack trophyStack) {
+	public static String getName(ItemStack trophyStack) {
 		if(trophyStack.hasTagCompound() && trophyStack.getTagCompound().hasKey(BlockSimpleTrophy.KEY_NAME)) {
 			return trophyStack.getTagCompound().getString(BlockSimpleTrophy.KEY_NAME);
 		} else return "";

@@ -24,8 +24,8 @@ public class ClientGameEvents {
 	public static void models(ModelRegistryEvent e) {
 		setSimpleItemModel(SimpleTrophiesItems.TROPHY);
 		
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSimpleTrophy.class, new RenderTileSimpleTrophy(false));
-		SimpleTrophiesItems.TROPHY.setTileEntityItemStackRenderer(new RenderItemStackSimpleTrophy(new RenderTileSimpleTrophy(true)));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileSimpleTrophy.class, new RenderTileSimpleTrophy());
+		SimpleTrophiesItems.TROPHY.setTileEntityItemStackRenderer(new RenderItemStackSimpleTrophy());
 	}
 	
 	private static void setSimpleItemModel(Item e) {
@@ -33,15 +33,38 @@ public class ClientGameEvents {
 	}
 	
 	private static long ticksInGame = 0;
+	private static boolean paused = false;
+	private static float lastNonPausedPartialTicks = 0;
+	
 	@SubscribeEvent
 	public static void clientTick(TickEvent.ClientTickEvent e) {
 		if(e.phase == TickEvent.Phase.END) {
-			GuiScreen ui = Minecraft.getMinecraft().currentScreen;
-			if(ui == null || !ui.doesGuiPauseGame()) ticksInGame++;
+			Minecraft mc = Minecraft.getMinecraft();
+			GuiScreen ui = mc.currentScreen;
+			//same method mc uses to determine if the game is paused
+			if(mc.isSingleplayer() && ui != null && ui.doesGuiPauseGame() && mc.getIntegratedServer() != null && !mc.getIntegratedServer().getPublic()) {
+				paused = true;
+			} else {
+				ticksInGame++;
+				paused = false;
+			}
 		}
 	}
 	
 	public static long getTicksInGame() {
 		return ticksInGame;
+	}
+	
+	/** Doesn't return a changing partialTicks value when the game is paused, to prevent "jitter" behavior */
+	public static float getPauseAdjustedPartialTicks() {
+		//honestly should just prolly AT that shit in Minecraft.java, i mean
+		if(paused) return lastNonPausedPartialTicks;
+		else {
+			return lastNonPausedPartialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
+		}
+	}
+	
+	public static float getPauseAdjustedTicksAndPartialTicks() {
+		return getTicksInGame() + getPauseAdjustedPartialTicks();
 	}
 }

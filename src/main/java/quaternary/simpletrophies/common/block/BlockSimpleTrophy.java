@@ -67,6 +67,11 @@ public class BlockSimpleTrophy extends Block {
 		return false;
 	}
 	
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean isTranslucent(IBlockState state) {
