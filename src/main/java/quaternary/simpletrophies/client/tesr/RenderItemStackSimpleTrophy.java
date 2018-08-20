@@ -11,10 +11,12 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.ClientGameEvents;
 import quaternary.simpletrophies.common.etc.TrophyHelpers;
@@ -59,6 +61,7 @@ public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
 			if(recursionDepth < 5) {
 				try {
 					Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
+					Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 				} catch(Exception oof) {
 					oof.printStackTrace();
 				}

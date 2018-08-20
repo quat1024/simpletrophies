@@ -3,9 +3,11 @@ package quaternary.simpletrophies.client.tesr;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
 import quaternary.simpletrophies.client.ClientGameEvents;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
@@ -30,7 +32,7 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			GlStateManager.rotate((ticks * 2.5f) % 360, 0, 1, 0);
 			GlStateManager.scale(1.6, 1.6, 1.6);
 			try {
-				Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
+				//Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
 			} catch(Exception oof) {
 				oof.printStackTrace();
 			}

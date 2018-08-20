@@ -43,8 +43,7 @@ public class ClientGameEvents {
 		BlockColors bc = e.getBlockColors();
 		bc.registerBlockColorHandler((state, world, pos, tintIndex) -> {
 			if(world == null || pos == null || tintIndex != 1) return 0xFFFFFF;
-			
-			TileEntity tile = (world).getTileEntity(pos);
+			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof TileSimpleTrophy) {
 				TileSimpleTrophy trophy = (TileSimpleTrophy) tile;
 				return TrophyHelpers.getCombinedColor(trophy);

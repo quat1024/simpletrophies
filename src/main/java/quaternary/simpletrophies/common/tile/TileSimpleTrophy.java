@@ -6,8 +6,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import quaternary.simpletrophies.common.block.BlockSimpleTrophy;
 
 import javax.annotation.Nullable;
@@ -77,5 +80,11 @@ public class TileSimpleTrophy extends TileEntity {
 		displayedColorRed = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_RED);
 		displayedColorGreen = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_GREEN);
 		displayedColorBlue = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_BLUE);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return new AxisAlignedBB(pos).expand(0, 0.5, 0);
 	}
 }

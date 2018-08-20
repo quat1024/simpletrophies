@@ -13,6 +13,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -153,5 +154,15 @@ public class BlockSimpleTrophy extends Block {
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
 		TileEntity tile = world.getTileEntity(pos);
 		return TrophyHelpers.createItemStackFromTile(tile instanceof TileSimpleTrophy ? ((TileSimpleTrophy)tile) : null);
+	}
+	
+	@Override
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		//No-op since breakBlock handles this.
+	}
+	
+	@Override
+	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+		//No-op since breakBlock handles this too.
 	}
 }
