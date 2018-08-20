@@ -1,6 +1,8 @@
 # Simple Trophies
 
-Simple Trophies adds one block, and if you guess what it is correctly first try I'll give you a hundred bucks.
+Simple Trophies adds one block, and if you guess what it is correctly first try I'll give you a hundred bucks
+
+<img src="https://raw.githubusercontent.com/quat1024/simpletrophies/master/.github/trophoo.png"/>
 
 ## Features
 
@@ -15,11 +17,13 @@ Simple Trophies adds one block, and if you guess what it is correctly first try 
 - No methods are added for actually *obtaining* these trophies. That's on you.
 - Definitely not a rip off of Age of Engineering's trophies. No sir.
 
+<img src="https://raw.githubusercontent.com/quat1024/simpletrophies/master/.github/topee.png"/>
+
 ## Usage
 
 ### Illegal hacker NBT
 
-Give your players a `simple_trophies:trophy` item with special NBT. All values are optional; if not specified, they will be created (which helps avoid problems caused by placing/breaking a trophy causing it to not stack with other trophies)
+Give your players a `simple_trophies:trophy` item with special NBT. All values are optional; if not specified, they will be created (which helps avoid problems caused by placing/breaking a trophy causing it to not stack with other trophies etc etc)
 
 - `TrophyName`: a string. Determines the name of the trophy item. Will change the item's name, and also the name that is displayed when you hover over the trophy block. Defaults to an empty string, which causes the name to display as "Trophy" and no in-world tooltip to appear.
 - `TrophyItem`: an item stack. Determines the item that is rotating on the trophy. Will show on the tooltip. Defaults to air.
