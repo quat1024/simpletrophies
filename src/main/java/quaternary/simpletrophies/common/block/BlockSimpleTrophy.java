@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -14,13 +15,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import quaternary.simpletrophies.common.item.ItemSimpleTrophy;
-import quaternary.simpletrophies.common.item.SimpleTrophiesItems;
+import quaternary.simpletrophies.common.etc.TrophyHelpers;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
 import javax.annotation.Nullable;
@@ -35,6 +36,8 @@ public class BlockSimpleTrophy extends Block {
 	
 	public BlockSimpleTrophy() {
 		super(Material.ROCK, MapColor.GOLD);
+		setHardness(2f);
+		setResistance(1f);
 	}
 	
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 1, 6/16d, 1);
@@ -61,34 +64,52 @@ public class BlockSimpleTrophy extends Block {
 		
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileSimpleTrophy) {
-			TileSimpleTrophy trophy = (TileSimpleTrophy) tile;
-			if(trophy.displayedStack.isEmpty()) {
+			TileSimpleTrophy trophy = (TileSimpleTrophy) tile;			
+			int averageColor = getAverageDyeColorHeldByPlayer(player);
+			if(averageColor == -1) {
 				trophy.displayedStack = player.getHeldItem(hand).copy();
-				IBlockState hahaYes = world.getBlockState(pos);
-				world.notifyBlockUpdate(pos, hahaYes, hahaYes, 2);
-				trophy.markDirty();
-				
-				return true;
+			} else {
+				trophy.displayedColorRed = (averageColor & 0xFF0000) >> 16;
+				trophy.displayedColorGreen = (averageColor & 0x00FF00) >> 8;
+				trophy.displayedColorBlue = averageColor & 0x0000FF;
 			}
+			
+			IBlockState hahaYes = world.getBlockState(pos);
+			world.notifyBlockUpdate(pos, hahaYes, hahaYes, 2);
+			trophy.markDirty();
+			return true;
 		}
 		
 		return false;
+	}
+	
+	private static int getAverageDyeColorHeldByPlayer(EntityPlayer player) {
+		int color = -1;
+		ItemStack main = player.getHeldItem(EnumHand.MAIN_HAND);
+		if(main.getItem() instanceof ItemDye && MathHelper.clamp(main.getMetadata(), 0, 15) == main.getMetadata()) {
+			color = ItemDye.DYE_COLORS[main.getMetadata()];
+		}
+		
+		ItemStack off = player.getHeldItem(EnumHand.OFF_HAND);
+		if(off.getItem() instanceof ItemDye && MathHelper.clamp(off.getMetadata(), 0, 15) == off.getMetadata()) {
+			int color2 = ItemDye.DYE_COLORS[off.getMetadata()];
+			int red = (((color & 0xFF0000) >> 16) + ((color2 & 0xFF0000) >> 16)) / 2;
+			int green = (((color & 0x00FF00) >> 8) + ((color2 & 0x00FF00) >> 8)) / 2;
+			int blue = ((color & 0x0000FF) + (color2 & 0x0000FF)) / 2;
+			color = (red << 16) | (green << 8) | blue;
+		}
+		
+		return color;
 	}
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileEntity tile = world.getTileEntity(pos);
 		if(tile instanceof TileSimpleTrophy) {
-			spawnAsEntity(world, pos, getItemStackFromTile((TileSimpleTrophy) tile));
+			spawnAsEntity(world, pos, TrophyHelpers.createItemStackFromTile((TileSimpleTrophy) tile));
 		}
 		
 		super.breakBlock(world, pos, state);
-	}
-	
-	public static ItemStack getItemStackFromTile(@Nullable TileSimpleTrophy tile) {
-		ItemStack stack = new ItemStack(SimpleTrophiesItems.TROPHY);
-		if(tile != null) ItemSimpleTrophy.populateStackNBTFromTile(stack, tile);
-		return stack;
 	}
 	
 	@Override
@@ -131,8 +152,6 @@ public class BlockSimpleTrophy extends Block {
 	@Override
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
 		TileEntity tile = world.getTileEntity(pos);
-		if(tile instanceof TileSimpleTrophy) {
-			return getItemStackFromTile((TileSimpleTrophy) tile);
-		} else return getItemStackFromTile(null);
+		return TrophyHelpers.createItemStackFromTile(tile instanceof TileSimpleTrophy ? ((TileSimpleTrophy)tile) : null);
 	}
 }

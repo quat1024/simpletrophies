@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.ClientGameEvents;
+import quaternary.simpletrophies.common.etc.TrophyHelpers;
 import quaternary.simpletrophies.common.item.ItemSimpleTrophy;
 
 public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
@@ -30,20 +31,20 @@ public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
 		//Render the base
 		BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
 		ModelManager mm = brd.getBlockModelShapes().getModelManager();
-		int color = ItemSimpleTrophy.getColor(stack);
+		int color = TrophyHelpers.getCombinedColor(stack);
 		float red = ((color & 0xFF0000) >> 16) / 255f;
 		float green = ((color & 0x00FF00) >> 8) / 255f;
 		float blue = (color & 0x0000FF) / 255f;
 		brd.getBlockModelRenderer().renderModelBrightnessColor(mm.getModel(baseMrl), 1f, red, green, blue);
 		
 		//Render the item
-		ItemStack displayedStack = ItemSimpleTrophy.getDisplayedItem(stack);
+		ItemStack displayedStack = TrophyHelpers.getDisplayedStack(stack);
 		
 		if(!displayedStack.isEmpty()) {
 			float ticks = ClientGameEvents.getPauseAdjustedTicksAndPartialTicks();
 			
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(.5, .6 + Math.sin(ticks / 25f) / 7f, .5);
+			GlStateManager.translate(.5, .5, .5);
 			if(displayedStack.getItem() instanceof ItemBlock) GlStateManager.translate(0, -0.1, 0);
 			
 			GlStateManager.rotate(ticks * 2.5f, 0, 1, 0);

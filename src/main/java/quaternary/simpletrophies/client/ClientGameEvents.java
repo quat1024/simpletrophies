@@ -20,6 +20,7 @@ import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.tesr.RenderItemStackSimpleTrophy;
 import quaternary.simpletrophies.client.tesr.RenderTileSimpleTrophy;
 import quaternary.simpletrophies.common.block.SimpleTrophiesBlocks;
+import quaternary.simpletrophies.common.etc.TrophyHelpers;
 import quaternary.simpletrophies.common.item.SimpleTrophiesItems;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
@@ -46,7 +47,7 @@ public class ClientGameEvents {
 			TileEntity tile = (world).getTileEntity(pos);
 			if(tile instanceof TileSimpleTrophy) {
 				TileSimpleTrophy trophy = (TileSimpleTrophy) tile;
-				return (trophy.displayedColorRed << 16) | (trophy.displayedColorGreen << 8) | trophy.displayedColorBlue;
+				return TrophyHelpers.getCombinedColor(trophy);
 			} else return 0xFFFFFF;
 		}, SimpleTrophiesBlocks.TROPHY);
 	}

@@ -13,19 +13,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.LogManager;
+import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.common.block.BlockSimpleTrophy;
+import quaternary.simpletrophies.common.etc.TrophyHelpers;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
 import javax.annotation.Nullable;
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,52 +40,35 @@ public class ItemSimpleTrophy extends ItemBlock {
 		super(block);
 	}
 	
-	public static ItemStack getDisplayedItem(ItemStack trophyStack) {
-		if(trophyStack.hasTagCompound() && trophyStack.getTagCompound().hasKey(BlockSimpleTrophy.KEY_ITEM)) {
-			return new ItemStack(trophyStack.getTagCompound().getCompoundTag(BlockSimpleTrophy.KEY_ITEM));
-		} else return ItemStack.EMPTY;
-	}
-	
-	public static String getName(ItemStack trophyStack) {
-		if(trophyStack.hasTagCompound() && trophyStack.getTagCompound().hasKey(BlockSimpleTrophy.KEY_NAME)) {
-			return trophyStack.getTagCompound().getString(BlockSimpleTrophy.KEY_NAME);
-		} else return "";
-	}
-	
-	public static int getColor(ItemStack trophyStack) {
-		if(trophyStack.hasTagCompound()) {
-			NBTTagCompound nbt = trophyStack.getTagCompound();
-			int red = nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_RED) ? nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_RED) : 255;
-			int green = nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_GREEN) ? nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_GREEN) : 255;
-			int blue = nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_BLUE) ? nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_BLUE) : 255;
-			red = MathHelper.clamp(red, 0, 255);
-			green = MathHelper.clamp(green, 0, 255);
-			blue = MathHelper.clamp(blue, 0, 255);
-			return (red << 16) | (green << 8) | blue;
-		} else return 0xFFFFFF;
-	}
-	
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
-		//Move vanilla customname stuff (italic) over to my own system
-		//This just lets people rename the trophy in an anvil instead of needing to manually NBT hack
-		//and have it not show up all... italicy and weird
+		if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound()); 
+		//Add all of the other NBT tags if they don't already exist
+		NBTTagCompound nbt = stack.getTagCompound();
+		if(!nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_RED)) nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_RED, 255);
+		if(!nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_GREEN)) nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_GREEN, 255);
+		if(!nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_BLUE)) nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_BLUE, 255);
+		if(!nbt.hasKey(BlockSimpleTrophy.KEY_ITEM)) nbt.setTag(BlockSimpleTrophy.KEY_ITEM, ItemStack.EMPTY.serializeNBT());
+		if(!nbt.hasKey(BlockSimpleTrophy.KEY_NAME)) nbt.setString(BlockSimpleTrophy.KEY_NAME, "");
+		
 		if(entity instanceof EntityPlayer && ((EntityPlayer)entity).isCreative()) {
+			//Move vanilla customname stuff (italic) over to my own system
+			//This just lets people rename the trophy in an anvil instead of needing to manually NBT hack
+			//and have it not show up all... italicy and weird
 			if(stack.hasDisplayName()) {
 				String customName = stack.getDisplayName();
-				if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
-				stack.getTagCompound().setString(BlockSimpleTrophy.KEY_NAME, customName);
+				nbt.setString(BlockSimpleTrophy.KEY_NAME, customName);
 				stack.clearCustomName();
 				
 				//remove the funky anvil tag too
-				if(stack.getTagCompound().hasKey("RepairCost")) stack.getTagCompound().removeTag("RepairCost");
+				if(nbt.hasKey("RepairCost")) nbt.removeTag("RepairCost");
 			}
 		}
 	}
 	
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		String trophyName = getName(stack);
+		String trophyName = TrophyHelpers.getDisplayedName(stack);
 		if(trophyName.isEmpty()) return super.getItemStackDisplayName(stack);
 		else return trophyName;
 	}
@@ -87,7 +76,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag mistake) {
-		ItemStack displayedStack = getDisplayedItem(stack);
+		ItemStack displayedStack = TrophyHelpers.getDisplayedStack(stack);
 		if(displayedStack.isEmpty()) return;
 		else {
 			//add the "Displayed" tooltip
@@ -118,7 +107,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 	
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
-		ItemStack displayedItem = getDisplayedItem(stack);
+		ItemStack displayedItem = TrophyHelpers.getDisplayedStack(stack);
 		return displayedItem.isEmpty() ? EnumRarity.COMMON : displayedItem.getRarity();
 	}
 	
@@ -130,7 +119,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 		if (state.getBlock() == this.block) {
 			TileEntity tile = world.getTileEntity(pos);
 			if(tile instanceof TileSimpleTrophy) {
-				populateTileNBTFromStack(stack, (TileSimpleTrophy) tile);
+				TrophyHelpers.populateTileNBTFromStack(stack, (TileSimpleTrophy) tile);
 			}
 			
 			this.block.onBlockPlacedBy(world, pos, state, player, stack);
@@ -145,30 +134,17 @@ public class ItemSimpleTrophy extends ItemBlock {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		//TODO nuke this LMAO
-		ItemStack hahaYes = player.getHeldItem(hand);
-		if(hahaYes.hasTagCompound()) {
-			System.out.println(hahaYes.getTagCompound());
+		if(player.isCreative()) {
+			ItemStack held = player.getHeldItem(hand);
+			if(held.hasTagCompound() && world.isRemote) {
+				String str = held.getTagCompound().toString();
+				LogManager.getLogger(SimpleTrophies.NAME).info(str);
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(str), null);
+				player.sendStatusMessage(new TextComponentTranslation("simple_trophies.misc.copied"), true);
+			}
+			return new ActionResult<>(EnumActionResult.SUCCESS, held);
 		}
+		
 		return super.onItemRightClick(world, player, hand);
-	}
-	
-	public static void populateStackNBTFromTile(ItemStack stack, TileSimpleTrophy tile) {
-		if(tile.displayedStack.isEmpty() && tile.displayedName.isEmpty()) return;
-		
-		if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
-		NBTTagCompound nbt = stack.getTagCompound();
-		assert nbt != null;
-		nbt.merge(tile.writeToNBTInternal(new NBTTagCompound()));
-	}
-	
-	public static void populateTileNBTFromStack(ItemStack stack, TileSimpleTrophy tile) {
-		if(!stack.hasTagCompound()) {
-			tile.displayedName = "";
-			tile.displayedStack = ItemStack.EMPTY;
-			return;
-		}
-		
-		tile.readFromNBTInternal(stack.getTagCompound());
 	}
 }
