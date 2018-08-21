@@ -11,11 +11,15 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.opengl.GL11;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.ClientGameEvents;
@@ -54,15 +58,43 @@ public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
 			GlStateManager.rotate(ticks * 2.5f, 0, 1, 0);
 			GlStateManager.scale(2, 2, 2);
 			
-			recursionDepth++;
+			//Fix flickering leaves issue on old Forges
+			//Without this line:
+			//RenderItem#renderItem is called on this item
+			// -> calls setBlurMipmap(false, false) which saves old blur/mipmap values (A)
+			// -> finds and calls this TEISR
+			// -> -> I call renderItem#renderItem
+			// -> -> -> calls setBlurMipmap(false, false) which destroys old values (!!!) (B)
+			// -> -> -> item rendering happens
+			// -> -> -> calls restoreLastBlurMipmap() which restores the (false, false) saved in A
+			// -> calls restoreLastBlurMipmap() which restores (false, false) from B
+			//values saved in A have now been overwritten with (false, false) - stateleak!
+			//
+			//With this line:
+			//RenderItem#renderItem is called on this item
+			// -> calls setBlurMipmap(false, false) which saves old blur/mipmap values (A)
+			// -> finds and calls this TEISR
+			// -> -> I call restoreLastBlurMipmap() which restores old values saved in A
+			// -> -> I call renderItem#renderItem
+			// -> -> -> calls setBlurMipmap(false, false) which saves old blur/mipmap values (B)
+			// -> -> -> item rendering happens
+			// -> -> -> calls restoreLastBlurMipmap() which restores the old values saved in A (saved again in B)
+			// -> calls restoreLastBlurMipmap() (but the saved values match the real values so nothing happens)
+			//values saved in A are now preserved - no stateleak
+			//
+			//Flickering leaves were fixed in https://github.com/MinecraftForge/MinecraftForge/pull/4997
+			//But it still stateleaks technically, you just can't see it on leaves.
+			Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 			
 			//Too many nested pushmatrixes can cause severe render glitching on my pc.
 			//Nobody's going to actually hand out trophies of trophies of trophies of trophies of trophies of trophies anyways.
 			//No, that's not a challenge, stop it.
 			//And you can't even see it anyways it's so small.
+			recursionDepth++;
+			
 			if(recursionDepth < 5) {
 				try {
-					//Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
+					Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
 				} catch(Exception oof) {
 					oof.printStackTrace();
 				}
