@@ -26,7 +26,7 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			
 			GlStateManager.pushMatrix();
 			
-			GlStateManager.translate(x + .5, y + .6 + Math.sin(ticks / 25f) / 7f, z + .5);
+			GlStateManager.translate(x + .5, y + .7 + Math.sin(ticks / 25f) / 7f, z + .5);
 			if(displayedStack.getItem() instanceof ItemBlock) GlStateManager.translate(0, -0.1, 0);
 			
 			GlStateManager.rotate((ticks * 2.5f) % 360, 0, 1, 0);

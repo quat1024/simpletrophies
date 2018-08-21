@@ -52,7 +52,7 @@ public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
 			float ticks = ClientGameEvents.getPauseAdjustedTicksAndPartialTicks();
 			
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(.5, .5, .5);
+			GlStateManager.translate(.5, .55, .5);
 			if(displayedStack.getItem() instanceof ItemBlock) GlStateManager.translate(0, -0.1, 0);
 			
 			GlStateManager.rotate(ticks * 2.5f, 0, 1, 0);

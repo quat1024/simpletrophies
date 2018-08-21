@@ -58,7 +58,7 @@ Once you are happy with your trophy item, right-click in the air with it. This w
 
 ## Wtf dude it looks like GAR-BOGE!!!!!! pls fix kthx!!!!!!!!!!!!!!!
 
-It's just a plain ol block model, so feel free to remodel it however you'd like. Anything with a `tintindex` of 1 will be tinted the custom color. How neat is that.
+It's just a plain ol block model, so feel free to remodel it however you'd like. Anything with a `tintindex` of 0 will be tinted the custom color. How neat is that.
 
 - Tiny brain: Retexture it and load your texture with Resource Loader.
 - Medium brain: Remodel it and load your new model with Resource Loader.
