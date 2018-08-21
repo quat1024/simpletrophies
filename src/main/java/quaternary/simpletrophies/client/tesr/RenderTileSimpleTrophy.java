@@ -32,7 +32,7 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			GlStateManager.rotate((ticks * 2.5f) % 360, 0, 1, 0);
 			GlStateManager.scale(1.6, 1.6, 1.6);
 			try {
-				//Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
+				Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
 			} catch(Exception oof) {
 				oof.printStackTrace();
 			}

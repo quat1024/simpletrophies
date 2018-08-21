@@ -30,6 +30,8 @@ public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
 	
 	@Override
 	public void renderByItem(ItemStack stack) {
+		if(!(stack.getItem() instanceof ItemSimpleTrophy)) return;
+		
 		//Render the base
 		BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
 		ModelManager mm = brd.getBlockModelShapes().getModelManager();
@@ -60,8 +62,7 @@ public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
 			//And you can't even see it anyways it's so small.
 			if(recursionDepth < 5) {
 				try {
-					Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
-					Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+					//Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
 				} catch(Exception oof) {
 					oof.printStackTrace();
 				}
