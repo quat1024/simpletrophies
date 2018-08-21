@@ -57,7 +57,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 			//and have it not show up all... italicy and weird
 			if(stack.hasDisplayName()) {
 				String customName = stack.getDisplayName();
-				nbt.setString(BlockSimpleTrophy.KEY_NAME, customName);
+				nbt.setString(BlockSimpleTrophy.KEY_NAME, customName.equals("<CLEAR>") ? "" : customName);
 				stack.clearCustomName();
 				
 				//remove the funky anvil tag too

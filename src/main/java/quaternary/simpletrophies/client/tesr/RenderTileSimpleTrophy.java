@@ -21,7 +21,7 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			
 			//spread out animations a little bit.
 			//...Used to use an actually pretty good hash function here, but I like the way this one makes
-			//lines of trophies on the ground make a little wave.
+			//lines of trophies on the ground make a little wave. Wooo!
 			ticks += (te.getPos().getX() ^ te.getPos().getZ()) * 30;
 			
 			GlStateManager.pushMatrix();

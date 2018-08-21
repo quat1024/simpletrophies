@@ -50,7 +50,8 @@ Only if you are in Creative mode, you can create these trophies in-game without 
   - Yeah this means you can't make a trophy of a vanilla dye without NBT hacking. Deal with it.
 - You can pick-block the trophy (or just break it, it will drop, even in creative) to get an item form. No need to hold CTRL when you pick block.
 - Rename a trophy in an anvil to change the name.
-  - (when you pull it out, it uses Minecraft's standard anvil naming format instead of my cool custom one, but it will get changed as soon as you bring it in to your inventory. The stupid anvil tags will get erased too.)
+  - Since you can't *remove* a custom name with an anvil, the special anvil name `<CLEAR>` has been special cased for that purpose.
+  - NB: when you pull the item out, it uses Minecraft's standard anvil naming format (italic) instead of the cool custom one (not italic), but it will get changed as soon as you bring it in to your inventory. The stupid anvil tags will get erased too.
 
 Once you are happy with your trophy item, right-click in the air with it. This will dump its NBT tag into the log and also copy it to your clipboard.
 
