@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
+import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.ClientGameEvents;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
@@ -34,7 +35,7 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			try {
 				Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
 			} catch(Exception oof) {
-				oof.printStackTrace();
+				SimpleTrophies.LOG.error("Problem rendering item on a trophy TESR", oof);
 			}
 			
 			GlStateManager.enableBlend(); //fix a stateleak in renderitem >.>

@@ -96,7 +96,7 @@ public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
 				try {
 					Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
 				} catch(Exception oof) {
-					oof.printStackTrace();
+					SimpleTrophies.LOG.error("Problem rendering item on a trophy TEISR", oof);
 				}
 			}
 			
