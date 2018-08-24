@@ -25,7 +25,7 @@ Simple Trophies adds one block, and if you guess what it is correctly first try 
 
 Give your players a `simple_trophies:trophy` item with special NBT. All values are optional; if not specified, they will be created (which helps avoid problems caused by placing/breaking a trophy causing it to not stack with other trophies etc etc)
 
-- `TrophyName`: a string. Determines the name of the trophy item. Will change the item's name, and also the name that is displayed when you hover over the trophy block. Defaults to an empty string, which causes the name to display as "Trophy" and no in-world tooltip to appear.
+- `TrophyName`: a string. Determines the name of the trophy item. Will change the item's name, and also the name that is displayed when you hover over the trophy block. Translation keys are acceptable values - in fact, all names passed in are treated as localization keys. Defaults to an empty string, which causes the name to display as "Trophy" and no in-world tooltip to appear.
 - `TrophyItem`: an item stack. Determines the item that is rotating on the trophy. Will show on the tooltip. Defaults to air.
 - `TrophyColorRed`, `TrophyColorGreen`, `TrophyColorBlue`: an integer 0 - 255, determines the tint of the inner ring of the trophy. All default to 255 which makes white.
 

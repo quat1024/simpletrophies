@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import quaternary.simpletrophies.common.block.BlockSimpleTrophy;
@@ -22,11 +23,8 @@ public class TileSimpleTrophy extends TileEntity {
 	public int displayedColorGreen = 255;
 	public int displayedColorBlue = 255;
 	
-	@Nullable
-	@Override
-	public ITextComponent getDisplayName() {
-		if(displayedName.isEmpty()) return null;
-		else return new TextComponentString(displayedName);
+	public String getLocalizedName() {
+		return I18n.translateToLocal(displayedName);
 	}
 	
 	@Nullable

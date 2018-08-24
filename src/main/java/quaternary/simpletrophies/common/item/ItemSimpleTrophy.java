@@ -70,7 +70,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 	public String getItemStackDisplayName(ItemStack stack) {
 		String trophyName = TrophyHelpers.getDisplayedName(stack);
 		if(trophyName.isEmpty()) return super.getItemStackDisplayName(stack);
-		else return trophyName;
+		else return I18n.translateToLocal(trophyName);
 	}
 	
 	@SideOnly(Side.CLIENT)
