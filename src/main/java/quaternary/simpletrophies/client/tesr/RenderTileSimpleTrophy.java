@@ -2,6 +2,7 @@ package quaternary.simpletrophies.client.tesr;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -29,12 +30,16 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			
 			GlStateManager.pushMatrix();
 			
-			GlStateManager.translate(x + .5, y + .7 + Math.sin(ticks / 25f) / 7f, z + .5);
-			//if(displayedStack.getItem() instanceof ItemBlock) GlStateManager.translate(0, -0.1, 0);
+			GlStateManager.translate(x + .5, y + .6 + Math.sin(ticks / 25f) / 7f, z + .5);
+			
+			if(!Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(displayedStack, getWorld(), null).isGui3d()) {
+				GlStateManager.translate(0, 0.2, 0);
+			}
 			
 			GlStateManager.rotate((ticks * 2.5f) % 360, 0, 1, 0);
 			GlStateManager.scale(1.6, 1.6, 1.6);
 			try {
+				
 				Minecraft.getMinecraft().getRenderItem().renderItem(displayedStack, ItemCameraTransforms.TransformType.GROUND);
 			} catch(Exception oof) {
 				SimpleTrophies.LOG.error("Problem rendering item on a trophy TESR", oof);

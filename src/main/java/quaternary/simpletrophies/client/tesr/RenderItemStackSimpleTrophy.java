@@ -53,7 +53,9 @@ public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
 			
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(.5, .55, .5);
-			if(displayedStack.getItem() instanceof ItemBlock) GlStateManager.translate(0, -0.1, 0);
+			if(!Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(displayedStack, Minecraft.getMinecraft().world, null).isGui3d()) {
+				GlStateManager.translate(0, 0.1, 0);
+			}
 			
 			GlStateManager.rotate(ticks * 2.5f, 0, 1, 0);
 			GlStateManager.scale(2, 2, 2);
