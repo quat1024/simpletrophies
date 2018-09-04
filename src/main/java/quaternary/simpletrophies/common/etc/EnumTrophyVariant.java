@@ -2,7 +2,6 @@ package quaternary.simpletrophies.common.etc;
 
 import net.minecraft.util.IStringSerializable;
 
-//Limited to 16 possible variants since they are stored in the Blockstate
 public enum EnumTrophyVariant implements IStringSerializable {
 	CLASSIC("classic", "quaternary"),
 	X00FF00_GRAY("neon", "0x00FF00"),
