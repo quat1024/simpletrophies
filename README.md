@@ -28,6 +28,10 @@ Give your players a `simple_trophies:trophy` item with special NBT. All values a
 - `TrophyName`: a string. Determines the name of the trophy item. Will change the item's name, and also the name that is displayed when you hover over the trophy block. Translation keys are acceptable values - in fact, all names passed in are treated as localization keys. Defaults to an empty string, which causes the name to display as "Trophy" and no in-world tooltip to appear.
 - `TrophyItem`: an item stack. Determines the item that is rotating on the trophy. Will show on the tooltip. Defaults to air.
 - `TrophyColorRed`, `TrophyColorGreen`, `TrophyColorBlue`: an integer 0 - 255, determines the tint of the inner ring of the trophy. All default to 255 which makes white.
+- `TrophyVariant`: a string. Determines the look of the trophy. There's a few to choose from:
+  * "classic": The one you see above. Designed by yours truly. This is the default one.
+  * "neon": A pulsating grey look. Designed by 0x00FF00.
+  * "gold": A shiny, smooth gold look. Designed by 0x00FF00.
 
 As an example, here's how I could use an NBT tag to give myself that diamond axe trophy. Newlines added for clarity.
 
@@ -36,7 +40,8 @@ As an example, here's how I could use an NBT tag to give myself that diamond axe
       TrophyName:"Cut th tree yes haha",
       TrophyColorRed:179,
       TrophyColorGreen:49,
-      TrophyColorBlue:44
+      TrophyColorBlue:44,
+      TrophyVariant:"classic"
     }
 
 ### Creative mode magic fairy stuff

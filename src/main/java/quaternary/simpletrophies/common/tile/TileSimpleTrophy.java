@@ -13,6 +13,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import quaternary.simpletrophies.common.block.BlockSimpleTrophy;
+import quaternary.simpletrophies.common.etc.EnumTrophyVariant;
 
 import javax.annotation.Nullable;
 
@@ -22,6 +23,7 @@ public class TileSimpleTrophy extends TileEntity {
 	public int displayedColorRed = 255;
 	public int displayedColorGreen = 255;
 	public int displayedColorBlue = 255;
+	public EnumTrophyVariant displayedVariant = EnumTrophyVariant.CLASSIC;
 	
 	public String getLocalizedName() {
 		return I18n.translateToLocal(displayedName);
@@ -68,6 +70,7 @@ public class TileSimpleTrophy extends TileEntity {
 		nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_RED, displayedColorRed);
 		nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_GREEN, displayedColorGreen);
 		nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_BLUE, displayedColorBlue);
+		nbt.setString(BlockSimpleTrophy.KEY_VARIANT, displayedVariant.getName());
 		
 		return nbt;
 	}
@@ -78,6 +81,7 @@ public class TileSimpleTrophy extends TileEntity {
 		displayedColorRed = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_RED);
 		displayedColorGreen = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_GREEN);
 		displayedColorBlue = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_BLUE);
+		displayedVariant = EnumTrophyVariant.fromString(nbt.getString(BlockSimpleTrophy.KEY_VARIANT));
 	}
 	
 	@SideOnly(Side.CLIENT)

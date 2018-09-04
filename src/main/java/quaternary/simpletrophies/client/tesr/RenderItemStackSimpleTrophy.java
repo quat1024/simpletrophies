@@ -1,5 +1,6 @@
 package quaternary.simpletrophies.client.tesr;
 
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -23,12 +24,23 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.opengl.GL11;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.ClientGameEvents;
+import quaternary.simpletrophies.common.block.BlockSimpleTrophy;
+import quaternary.simpletrophies.common.etc.EnumTrophyVariant;
 import quaternary.simpletrophies.common.etc.TrophyHelpers;
 import quaternary.simpletrophies.common.item.ItemSimpleTrophy;
 
 public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
-	//todo hardcode less
-	static final ModelResourceLocation baseMrl = new ModelResourceLocation(new ResourceLocation(SimpleTrophies.MODID, "trophy"), "normal");
+	static final ModelResourceLocation[] baseModels;
+	
+	static {
+		baseModels = new ModelResourceLocation[EnumTrophyVariant.VALUES.length];
+		PropertyEnum<EnumTrophyVariant> propVariant = BlockSimpleTrophy.PROP_VARIANT;
+		String variantName = propVariant.getName();
+		for(int i = 0; i < EnumTrophyVariant.VALUES.length; i++) {
+			EnumTrophyVariant var = EnumTrophyVariant.VALUES[i];
+			baseModels[i] = new ModelResourceLocation(new ResourceLocation(SimpleTrophies.MODID, "trophy"), variantName + '=' + propVariant.getName(var));
+		}
+	}
 	
 	int recursionDepth = 0;
 	
@@ -37,13 +49,14 @@ public class RenderItemStackSimpleTrophy extends TileEntityItemStackRenderer {
 		if(!(stack.getItem() instanceof ItemSimpleTrophy)) return;
 		
 		//Render the base
+		int variantID = TrophyHelpers.getDisplayedVariant(stack).ordinal();
 		BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
 		ModelManager mm = brd.getBlockModelShapes().getModelManager();
 		int color = TrophyHelpers.getCombinedColor(stack);
 		float red = ((color & 0xFF0000) >> 16) / 255f;
 		float green = ((color & 0x00FF00) >> 8) / 255f;
 		float blue = (color & 0x0000FF) / 255f;
-		brd.getBlockModelRenderer().renderModelBrightnessColor(mm.getModel(baseMrl), 1f, red, green, blue);
+		brd.getBlockModelRenderer().renderModelBrightnessColor(mm.getModel(baseModels[variantID]), 1f, red, green, blue);
 		
 		//Render the item
 		ItemStack displayedStack = TrophyHelpers.getDisplayedStack(stack);

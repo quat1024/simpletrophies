@@ -3,10 +3,10 @@
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
-		"top": "simple_trophies:block/trophy/top",
-		"particle": "simple_trophies:block/trophy/top",
-		"side": "simple_trophies:block/trophy/side",
-		"bottom": "simple_trophies:block/trophy/bottom"
+		"top": "simple_trophies:block/trophy/quat/top",
+		"particle": "simple_trophies:block/trophy/quat/top",
+		"side": "simple_trophies:block/trophy/quat/side",
+		"bottom": "simple_trophies:block/trophy/quat/bottom"
 	},
 	"elements": [
 		{

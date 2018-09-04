@@ -1,7 +1,13 @@
 {
 	"variants": {
-		"normal": {
-			"model": "simple_trophies:trophy"
+		"trophy_variant=classic": {
+			"model": "simple_trophies:trophy/quat/classic"
+		},
+		"trophy_variant=neon": {
+			"model": "simple_trophies:trophy/0x00ff00/neon"
+		},
+		"trophy_variant=gold": {
+			"model": "simple_trophies:trophy/0x00ff00/gold"
 		}
 	}
 }

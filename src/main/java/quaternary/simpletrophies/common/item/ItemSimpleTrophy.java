@@ -26,6 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.common.block.BlockSimpleTrophy;
+import quaternary.simpletrophies.common.etc.EnumTrophyVariant;
 import quaternary.simpletrophies.common.etc.TrophyHelpers;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
@@ -45,11 +46,13 @@ public class ItemSimpleTrophy extends ItemBlock {
 		if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound()); 
 		//Add all of the other NBT tags if they don't already exist
 		NBTTagCompound nbt = stack.getTagCompound();
+		assert nbt != null;
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_RED)) nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_RED, 255);
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_GREEN)) nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_GREEN, 255);
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_BLUE)) nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_BLUE, 255);
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_ITEM)) nbt.setTag(BlockSimpleTrophy.KEY_ITEM, ItemStack.EMPTY.serializeNBT());
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_NAME)) nbt.setString(BlockSimpleTrophy.KEY_NAME, "");
+		if(!nbt.hasKey(BlockSimpleTrophy.KEY_VARIANT)) nbt.setString(BlockSimpleTrophy.KEY_VARIANT, "classic");
 		
 		if(entity instanceof EntityPlayer && ((EntityPlayer)entity).isCreative()) {
 			//Move vanilla customname stuff (italic) over to my own system
@@ -77,8 +80,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag mistake) {
 		ItemStack displayedStack = TrophyHelpers.getDisplayedStack(stack);
-		if(displayedStack.isEmpty()) return;
-		else {
+		if(!displayedStack.isEmpty()) {
 			//add the "Displayed" tooltip
 			tooltip.add(I18n.translateToLocalFormatted("simple_trophies.misc.tooltip.displaying", displayedStack.getRarity().color + displayedStack.getDisplayName()));
 			
@@ -101,6 +103,13 @@ public class ItemSimpleTrophy extends ItemBlock {
 			displayedStack.getItem().addInformation(displayedStack, world, displayedTooltip, mistake);
 			displayedTooltip.forEach(s -> tooltip.add("   " + s));
 		}
+		
+		EnumTrophyVariant trophyVariant = TrophyHelpers.getDisplayedVariant(stack);
+		if(mistake.isAdvanced()) {
+			tooltip.add(TextFormatting.DARK_GRAY + I18n.translateToLocalFormatted("simple_trophies.misc.modelName", trophyVariant.blockstateVariant));
+		}
+		
+		tooltip.add(TextFormatting.DARK_GRAY + I18n.translateToLocalFormatted("simple_trophies.misc.modelBy", trophyVariant.author));
 		
 		super.addInformation(stack, world, tooltip, mistake);
 	}

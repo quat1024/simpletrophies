@@ -3,7 +3,9 @@ package quaternary.simpletrophies.common.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDye;
@@ -22,6 +24,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import quaternary.simpletrophies.common.etc.EnumTrophyVariant;
 import quaternary.simpletrophies.common.etc.TrophyHelpers;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
@@ -34,11 +37,16 @@ public class BlockSimpleTrophy extends Block {
 	public static final String KEY_COLOR_RED = "TrophyColorRed";
 	public static final String KEY_COLOR_GREEN = "TrophyColorGreen";
 	public static final String KEY_COLOR_BLUE = "TrophyColorBlue";
+	public static final String KEY_VARIANT = "TrophyVariant";
+	
+	public static final PropertyEnum<EnumTrophyVariant> PROP_VARIANT = PropertyEnum.create("trophy_variant", EnumTrophyVariant.class);
 	
 	public BlockSimpleTrophy() {
 		super(Material.ROCK, MapColor.GOLD);
 		setHardness(2f);
 		setResistance(1f);
+		
+		setDefaultState(getDefaultState().withProperty(PROP_VARIANT, EnumTrophyVariant.CLASSIC));
 	}
 	
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 1, 6/16d, 1);
@@ -137,6 +145,25 @@ public class BlockSimpleTrophy extends Block {
 	@Override
 	public int getLightOpacity(IBlockState state) {
 		return 0;
+	}
+	
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, PROP_VARIANT);
+	}
+	
+	//Required to override this even though I don't use meta since the default implementation throws.
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return 0;
+	}
+	
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
+		if(tile instanceof TileSimpleTrophy) {
+			return state.withProperty(PROP_VARIANT, ((TileSimpleTrophy)tile).displayedVariant);
+		} else return state;
 	}
 	
 	@SideOnly(Side.CLIENT)

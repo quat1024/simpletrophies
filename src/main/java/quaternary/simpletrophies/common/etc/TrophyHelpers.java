@@ -49,6 +49,16 @@ public class TrophyHelpers {
 		else return "";
 	}
 	
+	public static EnumTrophyVariant getDisplayedVariant(ItemStack stack) {
+		if(stack.hasTagCompound()) return getDisplayedVariant(stack.getTagCompound());
+		else return EnumTrophyVariant.CLASSIC;
+	}
+	
+	public static EnumTrophyVariant getDisplayedVariant(NBTTagCompound nbt) {
+		if(nbt.hasKey(BlockSimpleTrophy.KEY_VARIANT)) return EnumTrophyVariant.fromString(nbt.getString(BlockSimpleTrophy.KEY_VARIANT));
+		else return EnumTrophyVariant.CLASSIC;
+	}
+	
 	public static void populateStackNBTFromTile(ItemStack stack, TileSimpleTrophy tile) {
 		if(tile.displayedStack.isEmpty() && tile.displayedName.isEmpty()) return;
 		
@@ -66,6 +76,7 @@ public class TrophyHelpers {
 			tile.displayedColorRed = 255;
 			tile.displayedColorGreen = 255;
 			tile.displayedColorBlue = 255;
+			tile.displayedVariant = EnumTrophyVariant.CLASSIC;
 		} else tile.readFromNBTInternal(stack.getTagCompound());
 	}
 	
