@@ -8,9 +8,12 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.ClientGameEvents;
+import quaternary.simpletrophies.common.etc.DateHelpers;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
 public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimpleTrophy> {	
@@ -50,11 +53,18 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			GlStateManager.popMatrix();
 		}
 		
-		String name = te.getLocalizedName();
-		
-		if (!name.isEmpty() && rendererDispatcher.cameraHitResult != null && te.getPos().equals(rendererDispatcher.cameraHitResult.getBlockPos())) {
+		RayTraceResult hit = rendererDispatcher.cameraHitResult;
+		if(hit != null && te.getPos().equals(hit.getBlockPos())) {
 			setLightmapDisabled(true);
-			drawNameplate(te, name, x, y, z, 12);
+			
+			String formattedTime = DateHelpers.epochToString(te.earnedTime);
+			drawNameplate(te, formattedTime, x, y + 0.3, z, 12);
+			
+			String name = te.getLocalizedName();
+			if (!name.isEmpty()) {
+				drawNameplate(te, name, x, y, z, 12);
+			}
+			
 			setLightmapDisabled(false);
 		}
 	}

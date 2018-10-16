@@ -32,6 +32,7 @@ Give your players a `simple_trophies:trophy` item with special NBT. All values a
   * "classic": The one you see above. Designed by yours truly. This is the default one.
   * "neon": A pulsating grey look. Designed by 0x00FF00.
   * "gold": A shiny, smooth gold look. Designed by 0x00FF00.
+- `TrophyEarnedTime`: a long, representing the amount of seconds past January 1, 1970 in the server's time zone that the trophy was earned at.
 
 As an example, here's how I could use an NBT tag to give myself that diamond axe trophy. Newlines added for clarity.
 
@@ -58,7 +59,7 @@ Only if you are in Creative mode, you can create these trophies in-game without 
   - Since you can't *remove* a custom name with an anvil, the special anvil name `<CLEAR>` has been special cased for that purpose.
   - NB: when you pull the item out, it uses Minecraft's standard anvil naming format (italic) instead of the cool custom one (not italic), but it will get changed as soon as you bring it in to your inventory. The stupid anvil tags will get erased too.
 
-Once you are happy with your trophy item, right-click in the air with it. This will dump its NBT tag into the log and also copy it to your clipboard.
+Once you are happy with your trophy item, right-click in the air with it. This will dump its NBT tag into the log and also copy it to your clipboard. *The datetime that the trophy was earned at is not shown in this NBT tag* - it will be created the first time a player picks up the trophy item. If it was included, everyone would appear to have earned the trophy at the datetime that *you* first gave yourself the item, which is obviously not correct lol
 
 *None of these functions are available outside of Creative mode* so no need to worry about your players screwing up their hard earned trophies lol.
 

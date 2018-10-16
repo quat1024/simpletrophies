@@ -26,6 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.common.block.BlockSimpleTrophy;
+import quaternary.simpletrophies.common.etc.DateHelpers;
 import quaternary.simpletrophies.common.etc.EnumTrophyVariant;
 import quaternary.simpletrophies.common.etc.TrophyHelpers;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
@@ -53,6 +54,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_ITEM)) nbt.setTag(BlockSimpleTrophy.KEY_ITEM, ItemStack.EMPTY.serializeNBT());
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_NAME)) nbt.setString(BlockSimpleTrophy.KEY_NAME, "");
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_VARIANT)) nbt.setString(BlockSimpleTrophy.KEY_VARIANT, "classic");
+		if(!nbt.hasKey(BlockSimpleTrophy.KEY_EARNED_AT)) nbt.setLong(BlockSimpleTrophy.KEY_EARNED_AT, DateHelpers.now());
 		
 		if(entity instanceof EntityPlayer && ((EntityPlayer)entity).isCreative()) {
 			//Move vanilla customname stuff (italic) over to my own system
@@ -109,6 +111,8 @@ public class ItemSimpleTrophy extends ItemBlock {
 			tooltip.add(TextFormatting.DARK_GRAY + I18n.translateToLocalFormatted("simple_trophies.misc.modelName", trophyVariant.blockstateVariant));
 		}
 		
+		tooltip.add(I18n.translateToLocalFormatted("simple_trophies.misc.earnedAt", DateHelpers.epochToString(TrophyHelpers.getEarnTime(stack))));
+		
 		tooltip.add(TextFormatting.DARK_GRAY + I18n.translateToLocalFormatted("simple_trophies.misc.modelBy", trophyVariant.author));
 		
 		super.addInformation(stack, world, tooltip, mistake);
@@ -146,7 +150,11 @@ public class ItemSimpleTrophy extends ItemBlock {
 		if(player.isCreative()) {
 			ItemStack held = player.getHeldItem(hand);
 			if(held.hasTagCompound() && world.isRemote) {
-				String str = held.getTagCompound().toString();
+				NBTTagCompound cmp = held.getTagCompound().copy();
+				//Remove earned time since authors aren't likely to want that
+				cmp.removeTag(BlockSimpleTrophy.KEY_EARNED_AT);
+				String str = cmp.toString();
+				
 				LogManager.getLogger(SimpleTrophies.NAME).info(str);
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(str), null);
 				player.sendStatusMessage(new TextComponentTranslation("simple_trophies.misc.copied"), true);

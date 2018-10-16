@@ -59,6 +59,11 @@ public class TrophyHelpers {
 		else return EnumTrophyVariant.CLASSIC;
 	}
 	
+	public static long getEarnTime(ItemStack stack) {
+		if(stack.hasTagCompound()) return stack.getTagCompound().getLong(BlockSimpleTrophy.KEY_EARNED_AT);
+		else return 0;
+	}
+	
 	public static void populateStackNBTFromTile(ItemStack stack, TileSimpleTrophy tile) {
 		if(tile.displayedStack.isEmpty() && tile.displayedName.isEmpty()) return;
 		
@@ -77,6 +82,7 @@ public class TrophyHelpers {
 			tile.displayedColorGreen = 255;
 			tile.displayedColorBlue = 255;
 			tile.displayedVariant = EnumTrophyVariant.CLASSIC;
+			tile.earnedTime = 0;
 		} else tile.readFromNBTInternal(stack.getTagCompound());
 	}
 	
