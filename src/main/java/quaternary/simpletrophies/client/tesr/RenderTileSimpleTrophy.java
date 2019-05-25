@@ -13,6 +13,7 @@ import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.ClientGameEvents;
+import quaternary.simpletrophies.common.config.SimpleTrophiesConfig;
 import quaternary.simpletrophies.common.etc.DateHelpers;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 
@@ -57,8 +58,10 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 		if(hit != null && te.getPos().equals(hit.getBlockPos())) {
 			setLightmapDisabled(true);
 			
-			String formattedTime = DateHelpers.epochToString(te.earnedTime);
-			drawNameplate(te, formattedTime, x, y + 0.3, z, 12);
+			if(SimpleTrophiesConfig.SHOW_EARNEDAT && te.earnedTime != 0) {
+				String formattedTime = DateHelpers.epochToString(te.earnedTime);
+				drawNameplate(te, formattedTime, x, y + 0.3, z, 12);
+			}
 			
 			String name = te.getLocalizedName();
 			if (!name.isEmpty()) {

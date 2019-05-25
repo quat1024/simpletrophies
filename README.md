@@ -30,9 +30,9 @@ Give your players a `simple_trophies:trophy` item with special NBT. All values a
 - `TrophyColorRed`, `TrophyColorGreen`, `TrophyColorBlue`: an integer 0 - 255, determines the tint of the inner ring of the trophy. All default to 255 which makes white.
 - `TrophyVariant`: a string. Determines the look of the trophy. There's a few to choose from:
   * "classic": The one you see above. Designed by yours truly. This is the default one.
-  * "neon": A pulsating grey look. Designed by 0x00FF00.
-  * "gold": A shiny, smooth gold look. Designed by 0x00FF00.
-- `TrophyEarnedTime`: a long, representing the amount of seconds past January 1, 1970 in the server's time zone that the trophy was earned at.
+  * "neon": A pulsating grey look. **Designed by 0x00FF00**.
+  * "gold": A shiny, smooth gold look. **Designed by 0x00FF00**.
+- `TrophyEarnedTime`: a long, representing the amount of seconds past January 1, 1970 in the server's time zone that the trophy was earned at. If not specified, the default value is *right now*, so don't put this tag on trophies you give to the player!
 
 As an example, here's how I could use an NBT tag to give myself that diamond axe trophy. Newlines added for clarity.
 
@@ -50,14 +50,14 @@ As an example, here's how I could use an NBT tag to give myself that diamond axe
 Only if you are in Creative mode, you can create these trophies in-game without resorting to NBT hacking, if you prefer.
 
 - Right click with a (vanilla) dye to set the color.
-  - Holding dye in your mainhand *and* offhand at the same time, will set the color to the RGB average of the two.
+  - Holding dye in your mainhand *and* offhand at the same time will set the color to the RGB average of the two.
 - Right click with any other item to set the item to whatever you're holding.
   - Empty hand will clear it.
   - Yeah this means you can't make a trophy of a vanilla dye without NBT hacking. Deal with it.
 - You can pick-block the trophy (or just break it, it will drop, even in creative) to get an item form. No need to hold CTRL when you pick block.
 - Rename a trophy in an anvil to change the name.
   - Since you can't *remove* a custom name with an anvil, the special anvil name `<CLEAR>` has been special cased for that purpose.
-  - NB: when you pull the item out, it uses Minecraft's standard anvil naming format (italic) instead of the cool custom one (not italic), but it will get changed as soon as you bring it in to your inventory. The stupid anvil tags will get erased too.
+  - NB: when you pull the item out, it uses Minecraft's standard anvil naming format (italic) instead of the cool custom one (not italic), but it will get changed as soon as you bring it in to your inventory. Other anvil-related junk tags like repair cost will get deleted too.
 
 Once you are happy with your trophy item, right-click in the air with it. This will dump its NBT tag into the log and also copy it to your clipboard. *The datetime that the trophy was earned at is not shown in this NBT tag* - it will be created the first time a player picks up the trophy item. If it was included, everyone would appear to have earned the trophy at the datetime that *you* first gave yourself the item, which is obviously not correct lol
 

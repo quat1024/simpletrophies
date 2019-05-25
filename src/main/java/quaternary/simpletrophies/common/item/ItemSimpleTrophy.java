@@ -26,6 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.common.block.BlockSimpleTrophy;
+import quaternary.simpletrophies.common.config.SimpleTrophiesConfig;
 import quaternary.simpletrophies.common.etc.DateHelpers;
 import quaternary.simpletrophies.common.etc.EnumTrophyVariant;
 import quaternary.simpletrophies.common.etc.TrophyHelpers;
@@ -111,9 +112,14 @@ public class ItemSimpleTrophy extends ItemBlock {
 			tooltip.add(TextFormatting.DARK_GRAY + I18n.translateToLocalFormatted("simple_trophies.misc.modelName", trophyVariant.blockstateVariant));
 		}
 		
-		tooltip.add(I18n.translateToLocalFormatted("simple_trophies.misc.earnedAt", DateHelpers.epochToString(TrophyHelpers.getEarnTime(stack))));
+		long time = TrophyHelpers.getEarnTime(stack);
+		if(SimpleTrophiesConfig.SHOW_EARNEDAT && time != 0) {
+			tooltip.add(I18n.translateToLocalFormatted("simple_trophies.misc.earnedAt", DateHelpers.epochToString(time)));
+		}
 		
-		tooltip.add(TextFormatting.DARK_GRAY + I18n.translateToLocalFormatted("simple_trophies.misc.modelBy", trophyVariant.author));
+		if(SimpleTrophiesConfig.TOOLTIP_CREDITS) {
+			tooltip.add(TextFormatting.DARK_GRAY + I18n.translateToLocalFormatted("simple_trophies.misc.modelBy", trophyVariant.author));
+		}
 		
 		super.addInformation(stack, world, tooltip, mistake);
 	}
