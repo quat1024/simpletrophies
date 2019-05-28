@@ -24,6 +24,12 @@ public class SimpleTrophiesConfig {
 	
 	public static List<NBTTagCompound> CREATIVETAB_TAGS;
 	
+	public static boolean SKIP_ITEM_BASES;
+	public static boolean SKIP_ITEM_ITEMS;
+	public static boolean SKIP_BLOCK_ITEMS;
+	public static boolean NO_TEISR;
+	public static boolean NO_TESR;
+	
 	public static String DEFAULT_CREATIVETAB_STR = "{TrophyName:\"Add your own trophies here in the config!\",TrophyVariant:\"classic\",TrophyItem:{id:\"minecraft:diamond_axe\",Count:1b,Damage:0s},TrophyColorRed:65,TrophyColorGreen:205,TrophyColorBlue:52}";
 	public static NBTTagCompound DEFAULT_CREATIVETAB_TAG = SimpleTrophiesUtil.swallowError(() -> JsonToNBT.getTagFromJson(DEFAULT_CREATIVETAB_STR));
 	
@@ -48,6 +54,16 @@ public class SimpleTrophiesConfig {
 				SimpleTrophies.LOG.error("Can't parse this NBT tag: " + s, e);
 			}
 		}
+		
+		SKIP_BLOCK_ITEMS = config.getBoolean("skipBlockItems", "client.perf", false, "Don't show the items on top of trophies placed in the world. Saves on performance.");
+		
+		SKIP_ITEM_ITEMS = config.getBoolean("skipItemItems", "client.perf", false, "Don't show the items on top of trophies in your inventory and on other GUIs. Saves on performance.");
+		
+		SKIP_ITEM_BASES = config.getBoolean("skipItemBases", "client.perf", false, "Don't show trophy bases on trophies in your inventory and on other GUIs. Saves on performance.");
+		
+		NO_TESR = config.getBoolean("noTileEntitySpecialRenderer", "client.perf", false, "Emergency killswitch for the tile entity renderer. Enable in cases of extreme performance issues or client rendering-related crashes.\n(Requires a game restart in some cases.)");
+		
+		NO_TEISR = config.getBoolean("noTileEntityItemStackRenderer", "client.perf", false, "Emergency killswitch for the in-inventory trophy renderer. Enable in cases of extreme performance issues or client rendering-related crashes.\n(Requires a game restart in some cases.)\nIf this option is enabled, and skipItemBases is not, trophy item bases will render using a 'fast path' that is about as expensive as rendering a grass block item. This fast path is not compatible with the fancy trophy TEISR, to my knowledge.");
 		
 		if(config.hasChanged()) config.save();
 	}

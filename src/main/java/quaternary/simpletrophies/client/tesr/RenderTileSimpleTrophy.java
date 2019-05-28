@@ -20,11 +20,11 @@ import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimpleTrophy> {	
 	@Override
 	public void render(TileSimpleTrophy te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		if(te == null) return;
+		if(te == null || SimpleTrophiesConfig.NO_TESR) return;
 		
 		ItemStack displayedStack = te.displayedStack;
 		
-		if(!displayedStack.isEmpty()) {
+		if(!SimpleTrophiesConfig.SKIP_BLOCK_ITEMS && !displayedStack.isEmpty()) {
 			float ticks = ClientGameEvents.getPauseAdjustedTicksAndPartialTicks();
 			
 			//spread out animations a little bit.
@@ -36,7 +36,7 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			
 			GlStateManager.translate(x + .5, y + .6 + Math.sin(ticks / 25f) / 7f, z + .5);
 			
-			if(!Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(displayedStack, getWorld(), null).isGui3d()) {
+			if(!Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(displayedStack).isGui3d()) {
 				GlStateManager.translate(0, 0.2, 0);
 			}
 			

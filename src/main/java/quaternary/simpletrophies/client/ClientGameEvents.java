@@ -6,8 +6,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -20,6 +23,7 @@ import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.tesr.RenderItemStackSimpleTrophy;
 import quaternary.simpletrophies.client.tesr.RenderTileSimpleTrophy;
 import quaternary.simpletrophies.common.block.SimpleTrophiesBlocks;
+import quaternary.simpletrophies.common.config.SimpleTrophiesConfig;
 import quaternary.simpletrophies.common.etc.TrophyHelpers;
 import quaternary.simpletrophies.common.item.SimpleTrophiesItems;
 import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
@@ -30,8 +34,23 @@ public class ClientGameEvents {
 	public static void models(ModelRegistryEvent e) {
 		setSimpleItemModel(SimpleTrophiesItems.TROPHY);
 		
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSimpleTrophy.class, new RenderTileSimpleTrophy());
-		SimpleTrophiesItems.TROPHY.setTileEntityItemStackRenderer(new RenderItemStackSimpleTrophy());
+		if(SimpleTrophiesConfig.NO_TEISR) {
+			if(!SimpleTrophiesConfig.SKIP_ITEM_BASES) {
+				ModelLoader.setCustomMeshDefinition(SimpleTrophiesItems.TROPHY, stack ->
+					RenderItemStackSimpleTrophy.baseLocations.get(TrophyHelpers.getDisplayedVariant(stack))
+				);
+				
+				//this used to work...fuck it, doesnt seem to now though
+				ModelLoader.registerItemVariants(SimpleTrophiesItems.TROPHY, new ResourceLocation(SimpleTrophies.MODID, "trophy"));
+			}
+		} else {
+			SimpleTrophiesItems.TROPHY.setTileEntityItemStackRenderer(new RenderItemStackSimpleTrophy());
+			((SimpleReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(resourceManager -> RenderItemStackSimpleTrophy.dumpCache());
+		}
+		
+		if(!SimpleTrophiesConfig.NO_TESR) {
+			ClientRegistry.bindTileEntitySpecialRenderer(TileSimpleTrophy.class, new RenderTileSimpleTrophy());
+		}
 	}
 	
 	private static void setSimpleItemModel(Item e) {
@@ -49,6 +68,16 @@ public class ClientGameEvents {
 				return TrophyHelpers.getCombinedColor(trophy);
 			} else return 0xFFFFFF;
 		}, SimpleTrophiesBlocks.TROPHY);
+	}
+	
+	@SubscribeEvent
+	public static void itemColors(ColorHandlerEvent.Item e) {
+		//Has no effect unless skipTeisr is on, btw
+		ItemColors ic = e.getItemColors();
+		ic.registerItemColorHandler((stack, tintIndex) -> {
+			if(tintIndex != 0) return 0xFFFFFF;
+			else return TrophyHelpers.getCombinedColor(stack);
+		}, SimpleTrophiesItems.TROPHY);
 	}
 	
 	private static long ticksInGame = 0;
