@@ -32,18 +32,17 @@ import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 public class ClientGameEvents {
 	@SubscribeEvent
 	public static void models(ModelRegistryEvent e) {
-		setSimpleItemModel(SimpleTrophiesItems.TROPHY);
-		
 		if(SimpleTrophiesConfig.NO_TEISR) {
 			if(!SimpleTrophiesConfig.SKIP_ITEM_BASES) {
 				ModelLoader.setCustomMeshDefinition(SimpleTrophiesItems.TROPHY, stack ->
 					RenderItemStackSimpleTrophy.baseLocations.get(TrophyHelpers.getDisplayedVariant(stack))
 				);
 				
-				//this used to work...fuck it, doesnt seem to now though
 				ModelLoader.registerItemVariants(SimpleTrophiesItems.TROPHY, new ResourceLocation(SimpleTrophies.MODID, "trophy"));
 			}
 		} else {
+			setSimpleItemModel(SimpleTrophiesItems.TROPHY);
+			
 			SimpleTrophiesItems.TROPHY.setTileEntityItemStackRenderer(new RenderItemStackSimpleTrophy());
 			((SimpleReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(resourceManager -> RenderItemStackSimpleTrophy.dumpCache());
 		}
