@@ -47,6 +47,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 	public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
 		if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound()); 
 		//Add all of the other NBT tags if they don't already exist
+		//I am so sorry, I'm really sorry for this code
 		NBTTagCompound nbt = stack.getTagCompound();
 		assert nbt != null;
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_COLOR_RED)) nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_RED, 255);
@@ -56,6 +57,7 @@ public class ItemSimpleTrophy extends ItemBlock {
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_NAME)) nbt.setString(BlockSimpleTrophy.KEY_NAME, "");
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_VARIANT)) nbt.setString(BlockSimpleTrophy.KEY_VARIANT, "classic");
 		if(!nbt.hasKey(BlockSimpleTrophy.KEY_EARNED_AT)) nbt.setLong(BlockSimpleTrophy.KEY_EARNED_AT, DateHelpers.now());
+		if(!nbt.hasKey(BlockSimpleTrophy.KEY_SHOWS_TOOLTIP)) nbt.setBoolean(BlockSimpleTrophy.KEY_SHOWS_TOOLTIP, true);
 		
 		if(entity instanceof EntityPlayer && ((EntityPlayer)entity).isCreative()) {
 			//Move vanilla customname stuff (italic) over to my own system
@@ -100,11 +102,19 @@ public class ItemSimpleTrophy extends ItemBlock {
 				bob.append(')');
 				tooltip.add(bob.toString());
 			}
-			
-			//add the item itself's tooltip. Why not?
-			List<String> displayedTooltip = new ArrayList<>();
-			displayedStack.getItem().addInformation(displayedStack, world, displayedTooltip, mistake);
-			displayedTooltip.forEach(s -> tooltip.add("   " + s));
+
+			if(!SimpleTrophiesConfig.NO_TOOLTIP && TrophyHelpers.showsTooltip(stack)) {
+				//add the item itself's tooltip. Why not?
+				//(In 2020, I found some reasons why not)
+				try {
+					List<String> displayedTooltip = new ArrayList<>();
+					displayedStack.getItem().addInformation(displayedStack, world, displayedTooltip, mistake);
+					displayedTooltip.forEach(s -> tooltip.add("   " + s));
+				} catch (Exception fartNoise) {
+					//Some items are kinda wack with their tooltips and crash. Not much I can do.
+					//See: https://github.com/quat1024/simpletrophies/issues/6
+				}
+			}
 		}
 		
 		EnumTrophyVariant trophyVariant = TrophyHelpers.getDisplayedVariant(stack);

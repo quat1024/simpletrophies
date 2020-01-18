@@ -10,6 +10,11 @@ import quaternary.simpletrophies.common.tile.TileSimpleTrophy;
 import javax.annotation.Nullable;
 
 public class TrophyHelpers {
+	public static boolean showsTooltip(ItemStack stack) {
+		if(stack.hasTagCompound()) return stack.getTagCompound().getBoolean(BlockSimpleTrophy.KEY_SHOWS_TOOLTIP);
+		else return false;
+	}
+
 	public static int getCombinedColor(ItemStack stack) {
 		if(stack.hasTagCompound()) return getCombinedColor(stack.getTagCompound());
 		else return 0xFFFFFF;
@@ -83,6 +88,7 @@ public class TrophyHelpers {
 			tile.displayedColorBlue = 255;
 			tile.displayedVariant = EnumTrophyVariant.CLASSIC;
 			tile.earnedTime = 0;
+			tile.showsTooltip = true;
 		} else tile.readFromNBTInternal(stack.getTagCompound());
 	}
 	

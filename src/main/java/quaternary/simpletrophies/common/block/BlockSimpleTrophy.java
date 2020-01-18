@@ -39,6 +39,7 @@ public class BlockSimpleTrophy extends Block {
 	public static final String KEY_COLOR_BLUE = "TrophyColorBlue";
 	public static final String KEY_VARIANT = "TrophyVariant";
 	public static final String KEY_EARNED_AT = "TrophyEarnedAt";
+	public static final String KEY_SHOWS_TOOLTIP = "TrophyShowsTooltip";
 	
 	public static final PropertyEnum<EnumTrophyVariant> PROP_VARIANT = PropertyEnum.create("trophy_variant", EnumTrophyVariant.class);
 	

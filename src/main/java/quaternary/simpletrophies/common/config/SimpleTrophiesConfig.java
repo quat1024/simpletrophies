@@ -29,6 +29,7 @@ public class SimpleTrophiesConfig {
 	public static boolean SKIP_BLOCK_ITEMS;
 	public static boolean NO_TEISR;
 	public static boolean NO_TESR;
+	public static boolean NO_TOOLTIP;
 	
 	public static String DEFAULT_CREATIVETAB_STR = "{TrophyName:\"Add your own trophies here in the config!\",TrophyVariant:\"classic\",TrophyItem:{id:\"minecraft:diamond_axe\",Count:1b,Damage:0s},TrophyColorRed:65,TrophyColorGreen:205,TrophyColorBlue:52}";
 	public static NBTTagCompound DEFAULT_CREATIVETAB_TAG = SimpleTrophiesUtil.swallowError(() -> JsonToNBT.getTagFromJson(DEFAULT_CREATIVETAB_STR));
@@ -64,6 +65,8 @@ public class SimpleTrophiesConfig {
 		NO_TESR = config.getBoolean("noTileEntitySpecialRenderer", "client.perf", false, "Emergency killswitch for the tile entity renderer. Enable in cases of extreme performance issues or client rendering-related crashes.\n(Requires a game restart in some cases.)");
 		
 		NO_TEISR = config.getBoolean("noTileEntityItemStackRenderer", "client.perf", false, "Emergency killswitch for the in-inventory trophy renderer. Enable in cases of extreme performance issues or client rendering-related crashes.\n(Requires a game restart in some cases.)\nIf this option is enabled, and skipItemBases is not, trophy item bases will render using a 'fast path' that is about as expensive as rendering a grass block item. This fast path is not compatible with the fancy trophy TEISR, to my knowledge.");
+
+		NO_TOOLTIP = config.getBoolean("noTooltip", "client.perf", false, "Emergency killswitch for trophies repeating their item's tooltip, in case one is crashing for whatever reason ('fancy' items tend to do things with their tooltip I can't properly catch)");
 		
 		if(config.hasChanged()) config.save();
 	}

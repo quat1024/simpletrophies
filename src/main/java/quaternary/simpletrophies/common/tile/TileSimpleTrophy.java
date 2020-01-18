@@ -25,6 +25,7 @@ public class TileSimpleTrophy extends TileEntity {
 	public int displayedColorBlue = 255;
 	public EnumTrophyVariant displayedVariant = EnumTrophyVariant.CLASSIC;
 	public long earnedTime = 0;
+	public boolean showsTooltip = true;
 	
 	public String getLocalizedName() {
 		return I18n.translateToLocal(displayedName);
@@ -73,6 +74,7 @@ public class TileSimpleTrophy extends TileEntity {
 		nbt.setInteger(BlockSimpleTrophy.KEY_COLOR_BLUE, displayedColorBlue);
 		nbt.setString(BlockSimpleTrophy.KEY_VARIANT, displayedVariant.getName());
 		nbt.setLong(BlockSimpleTrophy.KEY_EARNED_AT, earnedTime);
+		nbt.setBoolean(BlockSimpleTrophy.KEY_SHOWS_TOOLTIP, showsTooltip);
 		
 		return nbt;
 	}
@@ -85,6 +87,7 @@ public class TileSimpleTrophy extends TileEntity {
 		displayedColorBlue = nbt.getInteger(BlockSimpleTrophy.KEY_COLOR_BLUE);
 		displayedVariant = EnumTrophyVariant.fromString(nbt.getString(BlockSimpleTrophy.KEY_VARIANT));
 		earnedTime = nbt.getLong(BlockSimpleTrophy.KEY_EARNED_AT);
+		showsTooltip = nbt.getBoolean(BlockSimpleTrophy.KEY_SHOWS_TOOLTIP);
 	}
 	
 	@SideOnly(Side.CLIENT)
