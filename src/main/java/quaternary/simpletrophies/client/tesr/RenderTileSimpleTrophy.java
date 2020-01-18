@@ -2,15 +2,10 @@ package quaternary.simpletrophies.client.tesr;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.translation.I18n;
-import org.lwjgl.opengl.GL11;
 import quaternary.simpletrophies.SimpleTrophies;
 import quaternary.simpletrophies.client.ClientGameEvents;
 import quaternary.simpletrophies.common.config.SimpleTrophiesConfig;
@@ -60,7 +55,7 @@ public class RenderTileSimpleTrophy extends TileEntitySpecialRenderer<TileSimple
 			
 			if(SimpleTrophiesConfig.SHOW_EARNEDAT && te.earnedTime != 0) {
 				String formattedTime = DateHelpers.epochToString(te.earnedTime);
-				drawNameplate(te, formattedTime, x, y + 0.3, z, 12);
+				drawNameplate(te, formattedTime, x, y + 0.25, z, 12);
 			}
 			
 			String name = te.getLocalizedName();

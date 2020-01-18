@@ -13,7 +13,7 @@ public class DateHelpers {
 		return Instant.now().atZone(ZoneId.systemDefault()).toEpochSecond();
 	}
 	
-	private static final DateTimeFormatter doot = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(Locale.UK).withZone(ZoneId.systemDefault());
+	private static final DateTimeFormatter doot = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(Locale.US).withZone(ZoneId.systemDefault());
 	
 	public static String epochToString(long time) {
 		if(time == 0) return "?";
